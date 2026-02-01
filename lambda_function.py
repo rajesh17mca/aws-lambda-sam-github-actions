@@ -32,6 +32,7 @@ def lambda_handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             "account_id": account_id,
             "bucket_count": len(buckets),
             "buckets": buckets,
+            "status": "Success"
         }
 
     except ClientError as e:
