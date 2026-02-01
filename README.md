@@ -24,31 +24,6 @@
 This should build automatically but it is good to review
 ```
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Federated": "arn:aws:iam::<YOUR_ACCOUNT_ID>:oidc-provider/token.actions.githubusercontent.com"
-      },
-      "Action": "sts:AssumeRoleWithWebIdentity",
-      "Condition": {
-        "StringEquals": {
-          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
-        },
-        "StringLike": {
-          "token.actions.githubusercontent.com:sub": "repo:<ORG>/<REPO>:ref:refs/heads/main"
-        }
-      }
-    }
-  ]
-}
-```
-
-### Step 4: Attach Permissions Policy (Least Privilege)
-Attach the IAM Policy which required for the AWS Lambda function deploymnenbt:
-```
-{
     "Version": "2012-10-17",
     "Statement": [
         {
@@ -63,6 +38,7 @@ Attach the IAM Policy which required for the AWS Lambda function deploymnenbt:
                 "cloudformation:DeleteChangeSet",
                 "cloudformation:Describe*",
                 "cloudformation:GetTemplate",
+                "cloudformation:GetTemplateSummary",
                 "cloudformation:ValidateTemplate"
             ],
             "Resource": "arn:aws:cloudformation:us-east-1:096938402899:stack/aws-lambda-github-sam-stack-*/*"
@@ -75,7 +51,8 @@ Attach the IAM Policy which required for the AWS Lambda function deploymnenbt:
                 "cloudformation:DescribeChangeSet",
                 "cloudformation:ExecuteChangeSet",
                 "cloudformation:DeleteChangeSet",
-                "cloudformation:GetTemplate"
+                "cloudformation:GetTemplate",
+                "cloudformation:GetTemplateSummary"
             ],
             "Resource": "*"
         },
@@ -108,7 +85,8 @@ Attach the IAM Policy which required for the AWS Lambda function deploymnenbt:
                 "lambda:ListVersionsByFunction",
                 "lambda:AddPermission",
                 "lambda:RemovePermission",
-                "lambda:TagResource"
+                "lambda:TagResource",
+                "lambda:UntagResource"
             ],
             "Resource": "arn:aws:lambda:us-east-1:096938402899:function:aws-lambda-github-sam-*"
         },
