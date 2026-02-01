@@ -1,5 +1,5 @@
 import pytest
-import lambda_function as app
+import src.lambda_function as app
 from botocore.exceptions import ClientError
 from unittest.mock import patch, MagicMock
 
