@@ -1,47 +1,65 @@
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Lambda that lists S3 buckets and AWS account ID
+
+Description: >
+  AWS Lambda SAM Stack for GitHub integration (Production)
 
 Parameters:
   Environment:
     Type: String
-    Default: dev
+    Default: prod
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+    Description: Deployment environment
 
 Globals:
   Function:
-    Runtime: python3.11
     Timeout: 10
     MemorySize: 128
-    Tracing: Active
+    Runtime: python3.11
 
 Resources:
-  ListBucketsFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: .
-      Handler: lambda_function.lambda_handler
-      Role: !GetAtt LambdaExecutionRole.Arn
-      Publish: true
 
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
+      RoleName: !Sub "aws-lambda-github-sam-stack-${Environment}-ExecutionRole"
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
           - Effect: Allow
             Principal:
-              Service: lambda.amazonaws.com
+              Service:
+                - lambda.amazonaws.com
             Action: sts:AssumeRole
-
       ManagedPolicyArns:
-        # CloudWatch Logs
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
 
-        # Read-only access to S3 (includes ListAllMyBuckets)
-        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+  ListBucketsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "aws-lambda-github-sam-stack-${Environment}"
+      Handler: lambda_function.lambda_handler
+      CodeUri: ./src
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Description: "List Buckets Lambda Function"
+      AutoPublishAlias: live
+      Environment:
+        Variables:
+          ENVIRONMENT: !Ref Environment
 
 Outputs:
-  LambdaName:
-    Description: Lambda function name
+
+  LambdaFunctionName:
+    Description: Name of the Lambda function
     Value: !Ref ListBucketsFunction
+
+  LambdaFunctionArn:
+    Description: ARN of the Lambda function alias
+    Value: !GetAtt ListBucketsFunction.Arn
+
+  LambdaFunctionAlias:
+    Description: Alias pointing to latest Lambda version
+    Value: !Ref ListBucketsFunction.LiveAlias
