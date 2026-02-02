@@ -50,7 +50,7 @@ Outputs:
 
   ListBucketsFunctionArn:
     Description: Lambda Function ARN
-    Value: !GetAtt ListBucketsFunction.Arn
+    Value: !Ref ListBucketsFunction
 
   ListBucketsFunctionVersion:
     Description: Lambda Function Version
@@ -58,4 +58,4 @@ Outputs:
 
   ListBucketsFunctionLiveAliasArn:
     Description: Lambda Function Live Alias ARN
-    Value: !GetAtt ListBucketsFunction.Live.Arn
+    Value: !GetAtt ListBucketsFunction.AliasArn
