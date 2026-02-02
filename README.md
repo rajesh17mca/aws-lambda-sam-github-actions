@@ -1,6 +1,15 @@
 # aws-lambda-github-actions
+This CICD Pipeline will create Lambda function and deploy when you commit to the Github
 
-### Step 1: Create Identity provider
+### Step 1: Create S3 bucket
+```
+aws s3api create-bucket \
+    --bucket aws-lambda-github-sam-s3-bucket \
+    --versioning-configuration Status=Enabled \
+    --region us-east-1
+```
+
+### Step 2: Create Identity provider
 1. Login to AWS Console
 2. Go to IAM → Identity providers
 3. Click Add Provider
@@ -9,7 +18,7 @@
     * Audience: sts.amazonaws.com
 4. Click Add provider
 
-### Step 2: Create IAM Role for GitHub Actions
+### Step 3: Create IAM Role for GitHub Actions
 1. Login to AWS Console
 2. Go to IAM → Roles
 3. Click Create role
@@ -20,7 +29,7 @@
     * Github repository
     * Github Branch 
 
-### Step 3: Configure Trust Policy - Review
+### Step 4: Configure Trust Policy - Review
 This should build automatically but it is good to review
 ```
 {
@@ -86,7 +95,10 @@ This should build automatically but it is good to review
                 "lambda:AddPermission",
                 "lambda:RemovePermission",
                 "lambda:TagResource",
-                "lambda:UntagResource"
+                "lambda:UntagResource",
+                "lambda:CreateAlias",
+                "lambda:UpdateAlias",
+                "lambda:GetFunctionConfiguration"
             ],
             "Resource": "arn:aws:lambda:us-east-1:096938402899:function:aws-lambda-github-sam-*"
         },
