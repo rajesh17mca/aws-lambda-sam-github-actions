@@ -46,6 +46,10 @@ Outputs:
     Description: Lambda function name
     Value: !Ref ListBucketsFunction
 
-  LambdaVersion:
-    Description: Lambda function version ARN
-    Value: !GetAtt ListBucketsFunction.Version
+  # LambdaVersion:
+  #   Description: Lambda function version ARN
+  #   Value: !GetAtt ListBucketsFunction.Version
+  
+  LambdaAliasARN:
+    Description: Lambda alias ARN (points to live version)
+    Value: !GetAtt ListBucketsFunction.Arn
