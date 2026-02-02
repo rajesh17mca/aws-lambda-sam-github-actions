@@ -56,6 +56,6 @@ Outputs:
     Description: Lambda Function Version
     Value: !GetAtt ListBucketsFunction.Version
 
-  ListBucketsFunctionAlias:
+  ListBucketsFunctionLiveAliasArn:
     Description: Lambda Function Live Alias ARN
-    Value: !GetAtt ListBucketsFunction.LiveAlias
+    Value: !GetAtt ListBucketsFunction.Live.Arn
