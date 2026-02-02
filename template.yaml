@@ -10,7 +10,6 @@ Parameters:
       - dev
       - staging
       - prod
-    Description: Deployment environment
 
 Globals:
   Function:
@@ -25,7 +24,7 @@ Resources:
     Properties:
       RoleName: !Sub "aws-lambda-github-sam-${Environment}-exec-role"
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
           - Effect: Allow
             Principal:
